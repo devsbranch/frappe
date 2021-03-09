@@ -62,7 +62,7 @@
 				<li class="vertical-bar d-none d-sm-block"></li>
 				<li class="nav-item dropdown dropdown-help dropdown-mobile d-none d-lg-block">
 					<a class="nav-link" data-toggle="dropdown" href="#" onclick="return false;">
-						{{ __("Help") }}
+						{{ __("My roles") }}
 						<span>
 							<svg class="icon icon-xs"><use href="#icon-small-down"></use></svg>
 						</span>
@@ -111,4 +111,9 @@
 			</ul>
 		</div>
 	</div>
+	<script>
+		$(function() {
+			$('.dropdown-help').remove();
+		});		
+	</script>
 </header>
