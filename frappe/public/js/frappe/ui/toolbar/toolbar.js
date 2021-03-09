@@ -143,6 +143,10 @@ frappe.ui.toolbar.Toolbar = class {
 
 };
 
+$(function() {
+	$('.dropdown-help').remove();
+});		
+
 $.extend(frappe.ui.toolbar, {
 	add_dropdown_button: function(parent, label, click, icon) {
 		var menu = frappe.ui.toolbar.get_menu(parent);
