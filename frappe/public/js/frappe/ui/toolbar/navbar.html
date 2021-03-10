@@ -62,7 +62,7 @@
 				<li class="vertical-bar d-none d-sm-block"></li>
 				<li class="nav-item dropdown dropdown-help dropdown-mobile d-none d-lg-block">
 					<a class="nav-link" data-toggle="dropdown" href="#" onclick="return false;">
-						{{ __("DB") }}
+						{{ __("QUICK") }}
 						<span>
 							<svg class="icon icon-xs"><use href="#icon-small-down"></use></svg>
 						</span>
@@ -73,11 +73,11 @@
 							{% if (!item.hidden) { %}
 								{% if (item.route) { %}
 									<a class="dropdown-item" href="{{ item.route }}">
-										<p></p>
+										{%= __(item.item_label) %}
 									</a>
 								{% } else if (item.action) { %}
 									<a class="dropdown-item" onclick="return {{ item.action }}">
-										<p></p>
+										{%= __(item.item_label) %}
 									</a>
 								{% } else { %}
 									<div class="dropdown-divider"></div>

@@ -6,9 +6,9 @@ import frappe
 from frappe.model.document import Document
 from frappe.utils import cint, flt, has_gravatar, escape_html, format_datetime, now_datetime, get_formatted_email, today
 from frappe import throw, msgprint, _
-from frappe.utils.password import update_password as _update_password
+from frappe.utils.password import update_password as _update_password, check_password
 from frappe.desk.notifications import clear_notifications
-from frappe.desk.doctype.notification_settings.notification_settings import create_notification_settings
+from frappe.desk.doctype.notification_settings.notification_settings import create_notification_settings, toggle_notifications
 from frappe.utils.user import get_system_managers
 from bs4 import BeautifulSoup
 import frappe.permissions
@@ -146,6 +146,9 @@ class User(Document):
 		if not cint(self.enabled) and getattr(frappe.local, "login_manager", None):
 			frappe.local.login_manager.logout(user=self.name)
 
+		# toggle notifications based on the user's status
+		toggle_notifications(self.name, enable=cint(self.enabled))
+
 	def add_system_manager_role(self):
 		# if adding system manager, do nothing
 		if not cint(self.enabled) or ("System Manager" in [user_role.role for user_role in
@@ -197,20 +200,17 @@ class User(Document):
 
 
 	def share_with_self(self):
-		if self.user_type=="System User":
-			frappe.share.add(self.doctype, self.name, self.name, write=1, share=1,
-				flags={"ignore_share_permission": True})
-		else:
-			frappe.share.remove(self.doctype, self.name, self.name,
-				flags={"ignore_share_permission": True, "ignore_permissions": True})
+		frappe.share.add(self.doctype, self.name, self.name, write=1, share=1,
+			flags={"ignore_share_permission": True})
 
 	def validate_share(self, docshare):
-		if docshare.user == self.name:
-			if self.user_type=="System User":
-				if docshare.share != 1:
-					frappe.throw(_("Sorry! User should have complete access to their own record."))
-			else:
-				frappe.throw(_("Sorry! Sharing with Website User is prohibited."))
+		pass
+		# if docshare.user == self.name:
+		# 	if self.user_type=="System User":
+		# 		if docshare.share != 1:
+		# 			frappe.throw(_("Sorry! User should have complete access to their own record."))
+		# 	else:
+		# 		frappe.throw(_("Sorry! Sharing with Website User is prohibited."))
 
 	def send_password_notification(self, new_password):
 		try:
@@ -302,16 +302,16 @@ class User(Document):
 		from frappe.utils.user import get_user_fullname
 		from frappe.utils import get_url
 
-		full_name = get_user_fullname(frappe.session['user'])
-		if full_name == "Guest":
-			full_name = "Administrator"
+		created_by = get_user_fullname(frappe.session['user'])
+		if created_by == "Guest":
+			created_by = "Administrator"
 
 		args = {
 			'first_name': self.first_name or self.last_name or "user",
 			'user': self.name,
 			'title': subject,
 			'login_url': get_url(),
-			'user_fullname': full_name
+			'created_by': created_by
 		}
 
 		args.update(add_args)
@@ -360,6 +360,9 @@ class User(Document):
 		frappe.db.sql("""update `tabContact`
 			set `user`=null
 			where `user`=%s""", (self.name))
+
+		# delete notification settings
+		frappe.delete_doc("Notification Settings", self.name, ignore_permissions=True)
 
 
 	def before_rename(self, old_name, new_name, merge=False):
@@ -530,6 +533,27 @@ class User(Document):
 
 		return [i.strip() for i in self.restrict_ip.split(",")]
 
+	@classmethod
+	def find_by_credentials(cls, user_name: str, password: str, validate_password: bool = True):
+		"""Find the user by credentials.
+		"""
+		login_with_mobile = cint(frappe.db.get_value("System Settings", "System Settings", "allow_login_using_mobile_number"))
+		filter = {"mobile_no": user_name} if login_with_mobile else {"name": user_name}
+
+		user = frappe.db.get_value("User", filters=filter, fieldname=['name', 'enabled'], as_dict=True) or {}
+		if not user:
+			return
+
+		user['is_authenticated'] = True
+		if validate_password:
+			try:
+				check_password(user_name, password)
+			except frappe.AuthenticationError:
+				user['is_authenticated'] = False
+
+		return user
+
+
 @frappe.whitelist()
 def get_timezones():
 	import pytz
@@ -565,6 +589,10 @@ def get_perm_info(role):
 
 @frappe.whitelist(allow_guest=True)
 def update_password(new_password, logout_all_sessions=0, key=None, old_password=None):
+	#validate key to avoid key input like ['like', '%'], '', ['in', ['']]
+	if key and not isinstance(key, str):
+		frappe.throw(_('Invalid key type'))
+
 	result = test_password_strength(new_password, key, old_password)
 	feedback = result.get("feedback", None)
 
@@ -595,7 +623,7 @@ def update_password(new_password, logout_all_sessions=0, key=None, old_password=
 	frappe.db.set_value("User", user, "reset_password_key", "")
 
 	if user_doc.user_type == "System User":
-		return "/desk"
+		return "/app"
 	else:
 		return redirect_url if redirect_url else "/"
 
@@ -1016,9 +1044,14 @@ def send_token_via_email(tmp_id,token=None):
 	hotp = pyotp.HOTP(otpsecret)
 
 	frappe.sendmail(
-		recipients=user_email, sender=None, subject='Verification Code',
-		message='<p>Your verification code is {0}</p>'.format(hotp.at(int(count))),
-		delayed=False, retry=3)
+		recipients=user_email,
+		sender=None,
+		subject="Verification Code",
+		template="verification_code",
+		args=dict(code=hotp.at(int(count))),
+		delayed=False,
+		retry=3
+	)
 
 	return True
 
@@ -1117,7 +1150,6 @@ def create_contact(user, ignore_links=False, ignore_mandatory=False):
 
 		contact.save(ignore_permissions=True)
 
-
 @frappe.whitelist()
 def generate_keys(user):
 	"""
@@ -1137,6 +1169,11 @@ def generate_keys(user):
 
 		return {"api_secret": api_secret}
 	frappe.throw(frappe._("Not Permitted"), frappe.PermissionError)
+
+@frappe.whitelist()
+def switch_theme(theme):
+	if theme in ["Dark", "Light"]:
+		frappe.db.set_value("User", frappe.session.user, "desk_theme", theme)
 
 def update_password_reset_limit(user):
 	generated_link_count = get_generated_link_count(user)
