@@ -10,9 +10,10 @@ frappe.help.has_help = function (doctype) {
 }
 
 frappe.help.show = function (doctype) {
-	if (frappe.help.youtube_id[doctype]) {
-		frappe.help.show_video(frappe.help.youtube_id[doctype]);
-	}
+	console.log("Guide not ready yet...");
+	// if (frappe.help.youtube_id[doctype]) {
+	// 	frappe.help.show_video(frappe.help.youtube_id[doctype]);
+	// }
 }
 
 frappe.help.show_video = function (youtube_id, title) {
@@ -21,9 +22,9 @@ frappe.help.show_video = function (youtube_id, title) {
 		youtube_id = youtube_id.match(expression)[1];
 	}
 
-	// (frappe.help_feedback_link || "")
+	(frappe.help_feedback_link || "")
 	let dialog = new frappe.ui.Dialog({
-		title: title || __("Help"),
+		title: title || __("Remote Manager"),
 		size: 'large'
 	});
 

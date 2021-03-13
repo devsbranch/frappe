@@ -42,6 +42,6 @@ frappe.help.help_links['reports'] = [
 ]
 
 frappe.help.help_links['dashboards'] = [
-	{ label: 'dashboards, url: 'http://#tobeadded...' },
+	{ label: 'dashboards', url: 'http://#tobeadded...' },
 ]
 
