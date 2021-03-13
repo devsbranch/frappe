@@ -13,8 +13,8 @@ frappe.ui.form.on('Website Settings', {
 	},
 
 	refresh: function(frm) {
-		frm.add_custom_button(__('View Website'), () => {
-			window.open('/', '_blank');
+		frm.add_custom_button(__('Home'), () => {
+			window.open('/app', '_blank');
 		});
 	},
 
