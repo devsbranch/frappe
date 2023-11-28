@@ -268,9 +268,9 @@ def add_standard_navbar_items():
 			"is_standard": 1,
 		},
 		{
-			"item_label": "Frappe Support",
+			"item_label": "System Support",
 			"item_type": "Route",
-			"route": "https://frappe.io/support",
+			"route": "#",
 			"is_standard": 1,
 		},
 	]

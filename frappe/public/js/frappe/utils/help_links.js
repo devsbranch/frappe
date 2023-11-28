@@ -3,83 +3,83 @@ frappe.provide("frappe.help.help_links");
 frappe.help.help_links["data-import-tool"] = [
 	{
 		label: "Importing and Exporting Data",
-		url: "https://docs.erpnext.com/docs/user/manual/en/data",
+		url: "#",
 	},
 ];
 
 frappe.help.help_links["modules/Setup"] = [
 	{
 		label: "Users and Permissions",
-		url: "https://frappeframework.com/docs/user/en/basics/users-and-permissions",
+		url: "#",
 	},
 	{
 		label: "System Settings",
-		url: "https://docs.erpnext.com/docs/user/manual/en/system-settings",
+		url: "#",
 	},
 	{
 		label: "Data Management",
-		url: "https://docs.erpnext.com/docs/user/manual/en/data",
+		url: "#",
 	},
-	{ label: "Email", url: "https://docs.erpnext.com/docs/user/manual/en/email" },
-	{ label: "Printing and Branding", url: "https://docs.erpnext.com/docs/user/manual/en/print" },
+	{ label: "Email", url: "#" },
+	{ label: "Printing and Branding", url: "#" },
 ];
 
 frappe.help.help_links["List/User"] = [
 	{
 		label: "Adding Users",
-		url: "https://docs.erpnext.com/docs/user/manual/en/adding-users",
+		url: "#",
 	},
 	{
 		label: "Rename User",
-		url: "https://docs.erpnext.com/docs/user/manual/en/renaming-documents",
+		url: "#",
 	},
 ];
 
 frappe.help.help_links["permission-manager"] = [
 	{
 		label: "Role Permissions Manager",
-		url: "https://frappeframework.com/docs/user/en/basics/users-and-permissions#role-permissions-manager",
+		url: "#",
 	},
 ];
 
 frappe.help.help_links["user-permissions"] = [
 	{
 		label: "User Permissions",
-		url: "https://frappeframework.com/docs/user/en/basics/users-and-permissions#user-permissions",
+		url: "#",
 	},
 ];
 
 frappe.help.help_links["Form/System Settings"] = [
 	{
 		label: "System Settings",
-		url: "https://docs.erpnext.com/docs/user/manual/en/system-settings",
+		url: "#",
 	},
 ];
 
 frappe.help.help_links["List/Email Account"] = [
 	{
 		label: "Email Account",
-		url: "https://docs.erpnext.com/docs/user/manual/en/email-account",
+		url: "#",
 	},
 ];
 
 frappe.help.help_links["List/Notification"] = [
 	{
 		label: "Notification",
-		url: "https://docs.erpnext.com/docs/user/manual/en/notifications",
+		url: "#",
 	},
 ];
 
 frappe.help.help_links["Form/Print Settings"] = [
 	{
 		label: "Print Settings",
-		url: "https://docs.erpnext.com/docs/user/manual/en/print-settings",
+		url: "#",
 	},
 ];
 
 frappe.help.help_links["print-format-builder"] = [
 	{
 		label: "Print Format Builder",
-		url: "https://docs.erpnext.com/docs/user/manual/en/print-format-builder",
+		url: "#",
 	},
 ];

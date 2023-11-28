@@ -9,8 +9,8 @@ WEBSITE_REPOS = [
 ]
 
 DOCUMENTATION_DOMAINS = [
-	"docs.erpnext.com",
-	"frappeframework.com",
+	"#",
+	"#",
 ]
 
 
