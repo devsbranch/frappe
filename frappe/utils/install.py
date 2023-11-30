@@ -270,7 +270,7 @@ def add_standard_navbar_items():
 		{
 			"item_label": "System Support",
 			"item_type": "Route",
-			"route": "#",
+			"route": "https://devsbranch.com",
 			"is_standard": 1,
 		},
 	]

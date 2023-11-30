@@ -236,7 +236,7 @@ class CustomizeForm(Document):
 				if frappe.db.is_db_table_size_limit(e):
 					frappe.throw(
 						_("You have hit the row size limit on database table: {0}").format(
-							"<a href='#'>"
+							"<a href='https://devsbranch.com'>"
 							"Maximum Number of Fields in a Form</a>"
 						),
 						title=_("Database Table Row Size Limit"),

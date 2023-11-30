@@ -231,7 +231,7 @@ def check_permission_and_not_submitted(doc):
 			_("{0} {1}: Submitted Record cannot be deleted. You must {2} Cancel {3} it first.").format(
 				_(doc.doctype),
 				doc.name,
-				"<a href='#' target='_blank'>",
+				"<a href='https://devsbranch.com' target='_blank'>",
 				"</a>",
 			),
 			raise_exception=True,

@@ -4,7 +4,7 @@ app_name = "frappe"
 app_title = "Frappe Framework"
 app_publisher = "Frappe Technologies"
 app_description = "Full stack web framework with Python, Javascript, MariaDB, Redis, Node"
-source_link = "#"
+source_link = "https://devsbranch.com"
 app_license = "MIT"
 app_logo_url = "/assets/frappe/images/frappe-framework-logo.svg"
 
@@ -14,7 +14,7 @@ app_email = "developers@frappe.io"
 
 docs_app = "frappe_docs"
 
-translator_url = "#"
+translator_url = "https://devsbranch.com"
 
 before_install = "frappe.utils.install.before_install"
 after_install = "frappe.utils.install.after_install"
